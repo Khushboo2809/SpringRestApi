@@ -3,6 +3,8 @@ package com.springrest.example.SpringRestProjectExample.controller;
 import com.springrest.example.SpringRestProjectExample.entities.Courses;
 import com.springrest.example.SpringRestProjectExample.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,10 +43,22 @@ public class MyController {
 
     }
 
-    @PutMapping("/{id}")
-    public Courses updateCourse(@PathVariable String id, @RequestBody Courses courses) {
-        return courseService.updateCourse(Long.parseLong(id), courses);
+    @PutMapping("/courses")
+    public Courses updateCourse(@RequestBody Courses courses) {
+        return courseService.updateCourse(courses);
 
+    }
+    @DeleteMapping("/courses/{courseId}")
+    public ResponseEntity<HttpStatus> deleteCourse(@PathVariable String courseId){
+
+        try {
+            this.courseService.deleteCourse(Long.parseLong(courseId));
+            return new ResponseEntity<>(HttpStatus.OK);
+
+        } catch (Exception e){
+
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
 
